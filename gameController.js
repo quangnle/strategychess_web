@@ -1,8 +1,53 @@
-var GameController = function(id){
+var GameController = function(id, width, height){
 	this.Id = id;
+	this.Board = new Board(width, height);
 	this.Logics = [];
 	
 	this.register = function(teamName){
+		if (!this.UpperTeam)
+			this.UpperTeam = new Team(teamName);
+		else
+			this.LowerTeam = new Team(teamName);
+	}
+	
+	this.getTeam = function(teamName){
+		if (this.UpperTeam.Name == teamName) return this.UpperTeam;
+		if (this.LowerTeam.Name == teamName) return this.LowerTeam;
+		return null;
+	}
+	
+	this.addUnit = function(type, row, col, teamName){
+		var team = getTeam(teamName);
+		if (team != null){
+			var unit = null;
+			var id = "";
+			if (type == "Archer")
+				unit = Archer(id, row, col, team);
+			else if (type == "Dagger")
+				unit = Dagger(id, row, col, team);
+			else if (type == "Tanker")
+				unit = Tanker(id, row, col, team);
+			else
+				unit = Camp(id, row, col, team);
+			
+			unit.Team = team;
+			team.Units.push(unit);
+			
+			// update id
+			for ( var i = 0; i < team.Units.length; i++){
+				var id = this.Id + "_" + teamName + "_" + (i + 1);
+				team.Units[i] = id;
+			}
+		}
+	}
+	
+	this.removeUnit = function(unit){
+		var team = unit.Team
+		for ( var i = 0; i < team.Units.length; i++){
+			if (unit.Id == team.Units[i].Id){
+				team.Units.slice(i, 1);
+			}
+		}
 	}
 	
 	this.ready = function(){
@@ -10,38 +55,58 @@ var GameController = function(id){
 		this.CurrentTeam = this.LowerTeam;
 		
 		var unitLogic = null;
-		for (var i = 0; i < this.UpperTeam.Units; i++){
-			// create appropriate logic for each unit
-			if (this.UpperTeam.Units[i].type == "Archer")
-				unitLogic = new ArcherLogic(this.UpperTeam.Units[i], matchLogic);
-			else if (this.UpperTeam.Units[i].type == "Tanker")
-				unitLogic = new TankerLogic(this.UpperTeam.Units[i], matchLogic);
-			else if (this.UpperTeam.Units[i].type == "Dagger")
-				unitLogic = new DaggerLogic(this.UpperTeam.Units[i], matchLogic);
-			
-			unitLogic.moved = this.onUnitMoved;
-			unitLogic.attacked = this.onUnitAttacked;
-		}
 		
-		for (var i = 0; i < this.LowerTeam.Units; i++){
-			// create appropriate logic for each unit
-			if (this.LowerTeam.Units[i].type == "Archer")
-				unitLogic = new ArcherLogic(this.LowerTeam.Units[i], matchLogic);
-			else if (this.LowerTeam.Units[i].type == "Tanker")
-				unitLogic = new TankerLogic(this.LowerTeam.Units[i], matchLogic);
-			else if (this.LowerTeam.Units[i].type == "Dagger")
-				unitLogic = new DaggerLogic(this.LowerTeam.Units[i], matchLogic);
-			
-			unitLogic.moved = this.onUnitMoved;
+		var tArr = [this.UpperTeam, this.LowerTeam];
+		for (var t = 0; t < tArr.length; t++){
+			for (var u = 0; u < tArr[t].Units.length; u++){
+				if (tArr[t].Units[u].type == "Archer")
+					unitLogic = new ArcherLogic(tArr[t].Units[u], matchLogic);
+				else if (tArr[t].Units[u].type == "Tanker")
+					unitLogic = new TankerLogic(tArr[t].Units[u], matchLogic);
+				else if (tArr[t].Units[u].type == "Dagger")
+					unitLogic = new DaggerLogic(tArr[t].Units[u], matchLogic);
+				
+				unitLogic.moved = this.onUnitMoved;
+				unitLogic.attacked = this.onUnitAttacked;
+			}
 		}
+	}
+	
+	this.getModel = function(){
+		return [this.UpperTeam, this.LowerTeam, this.Board];
 	}
 	
 	this.onUnitMoved = function(unit){
-		// check all rangers if there is enemy around then update cooldown
+		var tArr = [this.UpperTeam, this.LowerTeam];
+		for (var t = 0; t < tArr.length; t++){
+			for (var u = 0; u < tArr[t].Units.length; u++){
+				if (tArr[t].Units[u].type == "Archer"){
+					var enemies = this.MatchLogic.getUnits(unit.Row, unit.Column, 1, this.MatchLogic.getOpponent(unit.Team));
+					if (enemies != null && enemies.length > 0){
+						unit.CoolDown = Math.min(unit.MaxCoolDown, unit.CoolDown + 2);
+					}
+				}
+			}
+		}
+		
+		if (this.Validate){
+			this.Validate();
+		}
 	}
 	
 	this.onUnitAttacked = function(unit, targets){
-		// check all units if HP is 0 then fire dead event
+		var tArr = [this.UpperTeam, this.LowerTeam];
+		for (var t = 0; t < tArr.length; t++){
+			for (var u = 0; u < tArr[t].Units.length; u++){
+				if (tArr[t].Units[u].Hp <= 0){
+					this.remove(tArr[t].Units[u]);
+				}
+			}
+		}
+		
+		if (this.Validate){
+			this.Validate();
+		}
 	}
 	
 	this.getLogic = function(unit){
@@ -81,5 +146,7 @@ var GameController = function(id){
 	}
 	
 	this.next = function(){
+		if (this.CurrentTeam == UpperTeam) this.CurrentTeam = this.LowerTeam;
+		else this.CurrentTeam = this.UpperTeam;
 	}
 }
