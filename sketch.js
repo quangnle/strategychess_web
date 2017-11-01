@@ -31,10 +31,16 @@ function setup() {
 }
 
 function draw() {
-	if (mouseIsPressed) {
+	
+}
+
+function mouseClicked(){
+	if (mouseButton == LEFT) {
 		if (_boardCtrl.contains(mouseX, mouseY)){
 			var pos = _boardCtrl.clickedAt(mouseX, mouseY);
 			console.log(pos[0] + " " + pos[1]);
 		}
+	} else if (mouseButton == RIGHT){
+		console.log(mouseX + " " + mouseY);
 	}
 }
