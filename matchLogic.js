@@ -44,7 +44,7 @@ var MatchLogic = function(board, upperTeam, lowerTeam){
 		return result;
 	}
 	
-	this.getUnits(row, col, radius, team){
+	this.getUnits = function(row, col, radius, team){
 		var units = this.getUnits(row, col, radius);
 		var result = [];
 		if (units != null && units.length > 0){
@@ -54,7 +54,7 @@ var MatchLogic = function(board, upperTeam, lowerTeam){
 		}
 	}	
 	
-	this.getMovableBlocks(row, col, radius){
+	this.getMovableBlocks = function(row, col, radius){
 		var dc = [0, -1, 1, 0];
 		var dr = [-1, 0, 0, 1];
 		

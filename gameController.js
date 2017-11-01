@@ -1,5 +1,7 @@
 var GameController = function(id, width, height){
 	this.Id = id;
+	this.Width = width;
+	this.Height = height;
 	this.Board = new Board(width, height);
 	this.Logics = [];
 	

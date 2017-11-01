@@ -24,7 +24,7 @@ var DaggerLogic = function(unit, matchLogic){
 		if (unit.CoolDown == 0) {
 			var targets = this.getTargets();
 			if (targets != null && targets.length > 0){
-				for (var i = 0; i < targets.length; i++{
+				for (var i = 0; i < targets.length; i++){
 					if (row == targets[i].Row && col == targets[i].Column){
 						targets[i].Hp --;
 						

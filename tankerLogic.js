@@ -24,7 +24,7 @@ var TankerLogic = function(unit, matchLogic){
 		if (unit.CoolDown == 0) {
 			var targets = this.getTargets();
 			if (targets != null && targets.length > 0){
-				for (var i = 0; i < targets.length; i++{
+				for (var i = 0; i < targets.length; i++){
 					targets[i].Hp --;
 				}
 				
