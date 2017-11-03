@@ -28,16 +28,13 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 	this.LowerDaggerImg = null;
 	
 	
-	//generate blcok controls
+	//generate block controls
 	for (var r = 0; r < height; r++){
 		for(var c = 0; c < width; c++){
 			var blkControl = new BlockControl(x + c * blockWidth, y + r * blockHeight, blockWidth, blockHeight);
 			this.BlockControls.push(blkControl);
 		}
 	}
-	
-	//generate character controls
-	
 	
 	
 	this.databind = function(model){

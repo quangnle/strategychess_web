@@ -1,9 +1,10 @@
-var GameController = function(id, width, height){
+var GameCore = function(id, width, height){
 	this.Id = id;
 	this.Width = width;
 	this.Height = height;
 	this.Board = new Board(width, height);
 	this.Logics = [];
+	this.GameState = "Start";
 	
 	this.register = function(teamName){
 		if (!this.UpperTeam)
@@ -19,6 +20,7 @@ var GameController = function(id, width, height){
 	}
 	
 	this.addUnit = function(type, row, col, teamName){
+		if (this
 		var team = getTeam(teamName);
 		if (team != null){
 			var unit = null;

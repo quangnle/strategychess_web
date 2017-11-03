@@ -9,15 +9,19 @@ var BlockControl = function(x, y, width, height) {
 	this.Color = null;
 	this.BgColor = null;
 	
+	this.Control = new PaneControl(x, y, width, height);
+	
 	this.draw = function(){
-		fill(this.BgColor);
-		rect(this.X, this.Y, this.Width, this.Height);
-		
-		stroke(this.Color);		
-		rect(this.X, this.Y, this.Width, this.Height);
+		this.Control.X = this.X;
+		this.Control.Y = this.Y;
+		this.Control.Color = this.Color;
+		this.Control.BgColor = this.BgColor;
+		this.Control.draw();
 	}
 	
 	this.contains = function(x, y){
-		return(x >= this.X && x <= this.Width && y >= this.Y && y <= this.Height);
+		this.Control.X = this.X;
+		this.Control.Y = this.Y;
+		return this.Control.contains(x, y);
 	}
 }
