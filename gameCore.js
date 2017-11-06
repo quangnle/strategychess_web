@@ -20,7 +20,6 @@ var GameCore = function(id, width, height){
 	}
 	
 	this.addUnit = function(type, row, col, teamName){
-		if (this
 		var team = getTeam(teamName);
 		if (team != null){
 			var unit = null;

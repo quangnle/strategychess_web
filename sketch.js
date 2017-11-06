@@ -1,7 +1,8 @@
 var _blockWidth = 60;
 var _blockHeight = 55;
-var _gameController = new GameController(1, 10, 12);
+var _gameCore = new GameCore(1, 10, 12);
 var _boardCtrl = new BoardControl(5, 5, 10, 12, 60, 55);
+var _gameInfoCtrl = new GameInfoControl(_boardCtrl.X + _boardCtrl.Width + 10, _boardCtrl.Y + 10, 180, 150);
 
 function setup() {
 	createCanvas(850, 700);
@@ -25,9 +26,12 @@ function setup() {
 	this.LowerTankerImg = loadImage("imgs/Tanker_Green.png");
 	this.LowerDaggerImg = loadImage("imgs/Dagger_Green.png");
 	
-	_boardCtrl.draw();
+	_boardCtrl.draw();	
 	
-	
+	_gameInfoCtrl.Pane.BgColor = color(255, 255, 255);
+	_gameInfoCtrl.Pane.Color = color(0, 0, 0);
+	_gameInfoCtrl.initButtons(this.LowerArcherImg, this.LowerTankerImg, this.LowerDaggerImg, this.LowerCampImg);
+	_gameInfoCtrl.draw();
 }
 
 function draw() {
