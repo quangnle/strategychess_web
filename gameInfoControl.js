@@ -3,9 +3,9 @@ var GameInfoControl = function(x, y, width, height){
 	
 	this.initButtons = function(archerImg, tankerImg, daggerImg, campImg){
 		this.BtnSelectArcher = new PictureBoxControl(x + 5, y + 10, 55, 55, archerImg);
-		this.BtnSelectTanker = new PictureBoxControl(x + 5, y + 10, 55, 55, tankerImg);
-		this.BtnSelectDagger = new PictureBoxControl(x + 5, y + 10, 55, 55, daggerImg);
-		this.BtnSelectCamp = new PictureBoxControl(x + 5, y + 10, 55, 55, campImg);	
+		this.BtnSelectTanker = new PictureBoxControl(x + 10 + 55, y + 10, 55, 55, tankerImg);
+		this.BtnSelectDagger = new PictureBoxControl(x + 15 + 2*55, y + 10, 55, 55, daggerImg);
+		this.BtnSelectCamp = new PictureBoxControl(x + 10 + 55, y + 15 + 55, 55, 55, campImg);	
 	}
 	
 	this.draw = function(){

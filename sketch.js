@@ -2,7 +2,29 @@ var _blockWidth = 60;
 var _blockHeight = 55;
 var _gameCore = new GameCore(1, 10, 12);
 var _boardCtrl = new BoardControl(5, 5, 10, 12, 60, 55);
-var _gameInfoCtrl = new GameInfoControl(_boardCtrl.X + _boardCtrl.Width + 10, _boardCtrl.Y + 10, 180, 150);
+var _gameInfoCtrl = new GameInfoControl(_boardCtrl.X + _boardCtrl.Width + 10, _boardCtrl.Y + 10, 190, 200);
+
+var _upperCampImg = null;
+var _upperArcherImg = null;
+var _upperTankerImg = null;
+var _upperDaggerImg = null;
+
+var _lowerCampImg = null;
+var _lowerArcherImg = null;
+var _lowerTankerImg = null;
+var _lowerDaggerImg = null;
+
+function preload() {
+	_upperCampImg = loadImage("imgs/Camp_Blue.png");
+	_upperArcherImg = loadImage("imgs/Archer_Blue.png");
+	_upperTankerImg = loadImage("imgs/Tanker_Blue.png");
+	_upperDaggerImg = loadImage("imgs/Dagger_Blue.png");
+	
+	_lowerCampImg = loadImage("/imgs/Camp_Green.png");
+	_lowerArcherImg = loadImage("imgs/Archer_Green.png");
+	_lowerTankerImg = loadImage("imgs/Tanker_Green.png");
+	_lowerDaggerImg = loadImage("imgs/Dagger_Green.png");
+}
 
 function setup() {
 	createCanvas(850, 700);
@@ -16,21 +38,11 @@ function setup() {
 	_boardCtrl.LowerMovableFillColor = color(225, 251, 228);
 	_boardCtrl.AttackableFillColor = color(255, 100, 100);
 	
-	this.UpperCampImg = loadImage("imgs/Camp_Blue.png");
-	this.UpperArcherImg = loadImage("imgs/Archer_Blue.png");
-	this.UpperTankerImg = loadImage("imgs/Tanker_Blue.png");
-	this.UpperDaggerImg = loadImage("imgs/Dagger_Blue.png");
-	
-	this.LowerCampImg = loadImage("imgs/Camp_Green.png");
-	this.LowerArcherImg = loadImage("imgs/Archer_Green.png");
-	this.LowerTankerImg = loadImage("imgs/Tanker_Green.png");
-	this.LowerDaggerImg = loadImage("imgs/Dagger_Green.png");
-	
 	_boardCtrl.draw();	
 	
 	_gameInfoCtrl.Pane.BgColor = color(255, 255, 255);
 	_gameInfoCtrl.Pane.Color = color(0, 0, 0);
-	_gameInfoCtrl.initButtons(this.LowerArcherImg, this.LowerTankerImg, this.LowerDaggerImg, this.LowerCampImg);
+	_gameInfoCtrl.initButtons(_lowerArcherImg, _lowerTankerImg, _lowerDaggerImg, _lowerCampImg);
 	_gameInfoCtrl.draw();
 }
 
