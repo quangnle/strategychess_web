@@ -4,13 +4,17 @@ var GameCore = function(id, width, height){
 	this.Height = height;
 	this.Board = new Board(width, height);
 	this.Logics = [];
-	this.GameState = "Start";
+	this.GameState = "init";
 	
 	this.register = function(teamName){
-		if (!this.UpperTeam)
+		if (!this.UpperTeam){
 			this.UpperTeam = new Team(teamName);
-		else
+			this.UpperTeam.Label = "Upper";
+		}
+		else{
 			this.LowerTeam = new Team(teamName);
+			this.LowerTeam.Label = "Lower";
+		}
 	}
 	
 	this.getTeam = function(teamName){
@@ -20,35 +24,39 @@ var GameCore = function(id, width, height){
 	}
 	
 	this.addUnit = function(type, row, col, teamName){
-		var team = getTeam(teamName);
-		if (team != null){
-			var unit = null;
-			var id = "";
-			if (type == "Archer")
-				unit = Archer(id, row, col, team);
-			else if (type == "Dagger")
-				unit = Dagger(id, row, col, team);
-			else if (type == "Tanker")
-				unit = Tanker(id, row, col, team);
-			else
-				unit = Camp(id, row, col, team);
-			
-			unit.Team = team;
-			team.Units.push(unit);
-			
-			// update id
-			for ( var i = 0; i < team.Units.length; i++){
-				var id = this.Id + "_" + teamName + "_" + (i + 1);
-				team.Units[i] = id;
+		if ( this.State == "init") {
+			var team = getTeam(teamName);
+			if (team != null){
+				var unit = null;
+				var id = "";
+				if (type == "Archer")
+					unit = Archer(id, row, col, team);
+				else if (type == "Dagger")
+					unit = Dagger(id, row, col, team);
+				else if (type == "Tanker")
+					unit = Tanker(id, row, col, team);
+				else
+					unit = Camp(id, row, col, team);
+				
+				unit.Team = team;
+				team.Units.push(unit);
+				
+				// update id
+				for ( var i = 0; i < team.Units.length; i++){
+					var id = this.Id + "_" + teamName + "_" + (i + 1);
+					team.Units[i] = id;
+				}
 			}
 		}
 	}
 	
 	this.removeUnit = function(unit){
-		var team = unit.Team
-		for ( var i = 0; i < team.Units.length; i++){
-			if (unit.Id == team.Units[i].Id){
-				team.Units.slice(i, 1);
+		if ( this.State == "init") {
+			var team = unit.Team
+			for ( var i = 0; i < team.Units.length; i++){
+				if (unit.Id == team.Units[i].Id){
+					team.Units.slice(i, 1);
+				}
 			}
 		}
 	}
@@ -73,6 +81,8 @@ var GameCore = function(id, width, height){
 				unitLogic.attacked = this.onUnitAttacked;
 			}
 		}
+		
+		this.State = "playing";
 	}
 	
 	this.getModel = function(){
@@ -91,10 +101,6 @@ var GameCore = function(id, width, height){
 				}
 			}
 		}
-		
-		if (this.Validate){
-			this.Validate();
-		}
 	}
 	
 	this.onUnitAttacked = function(unit, targets){
@@ -105,10 +111,6 @@ var GameCore = function(id, width, height){
 					this.remove(tArr[t].Units[u]);
 				}
 			}
-		}
-		
-		if (this.Validate){
-			this.Validate();
 		}
 	}
 	

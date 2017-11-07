@@ -1,13 +1,13 @@
 var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 	this.X = x;
-	this.Y = y;
+	this.Y = y;	
 	this.BlockWidth = blockWidth;
 	this.BlockHeight = blockHeight;
 	this.Width = x + width * blockWidth;
 	this.Height = x + height * blockHeight;
 	this.BlockControls = [];
-	this.CharControls = [];
 	
+	this.GameCore = null;
 	
 	this.BlockBorderColor = null;	
 	this.NormalBlockFillColor = null;
@@ -32,13 +32,75 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 	for (var r = 0; r < height; r++){
 		for(var c = 0; c < width; c++){
 			var blkControl = new BlockControl(x + c * blockWidth, y + r * blockHeight, blockWidth, blockHeight);
+			blkControl.Row = r;
+			blkControl.Column = c;
 			this.BlockControls.push(blkControl);
 		}
 	}
 	
+	this.getBlock = function(row, col) {
+		for (var i = 0; i < this.BlockControls.length; i++){
+			if (this.BlockControls[i].Row == row && this.BlockControls[i].Column == col)
+				return this.BlockControls[i];
+		}
+		return null;
+	}
 	
-	this.databind = function(model){
+	this.onClicked = function(mx , my){
+		var x = this.X - mx;
+		var y = this.Y - my;
+		var col = Math.floor(x / this.BlockWidth);
+		var row = Math.floor(y / this.BlockHeight);
 		
+		if (GameCore.State == "init") {
+			
+		} else if(GameCore.State == "playing") {
+			var team = this.GameCore.CurrentTeam;
+			var unit = this.GameCore.getUnit(row, col);
+			if (unit.Team.Name == team.Name){
+				if (unit != null) {
+					this.GameCore.selectUnit(unit);
+					var sBlock = this.GameCore.getBlock(row, col);
+					sBlock.State = team.Label + "Selected";
+					
+					// update view area
+					var moves = this.GameCore.getAvailableMoves();
+					if (moves != null){
+						for	(var i = 0; i < moves.length; i++){
+							var b = this.GameCore.getBlock(moves[i].Row, moves[i].Column);
+							b.State = team.Label + "Movable";
+						}
+					}
+					
+					// update target blocks
+					var targets = this.GameCore.getTargets();
+					if (targets != null){
+						for (var i = 0; i < targets.length; i++){
+							var b = this.GameCore.getBlock(moves[i].Row, moves[i].Column);
+							b.State = "Attackable";
+						}
+					}
+				} else {
+					if (this.SelectedUnit != null) {
+						this.GameCore.SelectedLogic.move(row, col);
+						// update target blocks
+						var targets = this.GameCore.getTargets();
+						if (targets != null){
+							for (var i = 0; i < targets.length; i++){
+								var b = this.GameCore.getBlock(moves[i].Row, moves[i].Column);
+								b.State = "Attackable";
+							}
+						}
+					}
+				}
+			} else {
+				if (this.GameCore.SelectedUnit != null){
+					this.GameCore.SelectedLogic.attack(row, col);
+				}
+			}				
+		} else{
+			
+		}
 	}
 	
 	this.getColor = function(blockCtrl){
@@ -73,11 +135,5 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 	
 	this.contains = function(x, y){
 		return(x >= this.X && x <= this.Width && y >= this.Y && y <= this.Height);
-	}
-	
-	this.clickedAt = function(x, y){
-		var col = Math.floor((x - this.X) / this.BlockWidth);
-		var row = Math.floor((y - this.Y) / this.BlockHeight);
-		return [row, col];
 	}
 }
