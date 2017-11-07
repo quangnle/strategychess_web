@@ -3,8 +3,8 @@ var MatchLogic = function(board, upperTeam, lowerTeam){
 	this.Teams = []
 	this.UpperTeam = upperTeam;
 	this.LowerTeam = lowerTeam;
-	this.Teams.Push(upperTeam);
-	this.Teams.Push(lowerTeam);
+	this.Teams.push(upperTeam);
+	this.Teams.push(lowerTeam);
 	
 	this.getOpponent = function(team){
 		if (team.Name == upperTeam.Name) return lowerTeam;

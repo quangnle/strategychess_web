@@ -4,7 +4,7 @@ var GameCore = function(id, width, height){
 	this.Height = height;
 	this.Board = new Board(width, height);
 	this.Logics = [];
-	this.GameState = "init";
+	this.State = "init";
 	
 	this.register = function(teamName){
 		if (!this.UpperTeam){
@@ -25,7 +25,7 @@ var GameCore = function(id, width, height){
 	
 	this.addUnit = function(type, row, col, teamName){
 		if ( this.State == "init") {
-			var team = getTeam(teamName);
+			var team = this.getTeam(teamName);
 			if (team != null){
 				var unit = null;
 				var id = "";
@@ -44,7 +44,7 @@ var GameCore = function(id, width, height){
 				// update id
 				for ( var i = 0; i < team.Units.length; i++){
 					var id = this.Id + "_" + teamName + "_" + (i + 1);
-					team.Units[i] = id;
+					team.Units[i].Id = id;
 				}
 			}
 		}
@@ -77,8 +77,10 @@ var GameCore = function(id, width, height){
 				else if (tArr[t].Units[u].type == "Dagger")
 					unitLogic = new DaggerLogic(tArr[t].Units[u], matchLogic);
 				
-				unitLogic.moved = this.onUnitMoved;
-				unitLogic.attacked = this.onUnitAttacked;
+				if (unitLogic != null){
+					unitLogic.moved = this.onUnitMoved;
+					unitLogic.attacked = this.onUnitAttacked;
+				}
 			}
 		}
 		

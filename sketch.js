@@ -15,6 +15,31 @@ var _lowerArcherImg = null;
 var _lowerTankerImg = null;
 var _lowerDaggerImg = null;
 
+function initChess(){
+	_gameCore.register("Alice");	
+	_gameCore.addUnit("Archer", 2, 2,_gameCore.UpperTeam.Name);
+	_gameCore.addUnit("Archer", 2, 3,_gameCore.UpperTeam.Name);
+	_gameCore.addUnit("Tanker", 0, 7,_gameCore.UpperTeam.Name);
+	_gameCore.addUnit("Tanker", 1, 8,_gameCore.UpperTeam.Name);
+	_gameCore.addUnit("Tanker", 2, 9,_gameCore.UpperTeam.Name);
+	_gameCore.addUnit("Dagger", 1, 5,_gameCore.UpperTeam.Name);
+	_gameCore.addUnit("Camp", 0, 5,_gameCore.UpperTeam.Name);
+	_gameCore.addUnit("Camp", 0, 0,_gameCore.UpperTeam.Name);
+	
+	
+	_gameCore.register("Bob");
+	_gameCore.addUnit("Archer", 9, 2,_gameCore.LowerTeam.Name);
+	_gameCore.addUnit("Archer", 9, 3,_gameCore.LowerTeam.Name);
+	_gameCore.addUnit("Tanker", 10, 7,_gameCore.LowerTeam.Name);
+	_gameCore.addUnit("Tanker", 11, 8,_gameCore.LowerTeam.Name);
+	_gameCore.addUnit("Tanker", 9, 9,_gameCore.LowerTeam.Name);
+	_gameCore.addUnit("Dagger", 11, 5,_gameCore.LowerTeam.Name);
+	_gameCore.addUnit("Camp", 10, 5,_gameCore.LowerTeam.Name);
+	_gameCore.addUnit("Camp", 10, 0,_gameCore.LowerTeam.Name);
+	
+	_gameCore.ready();
+}
+
 function preload() {
 	_upperCampImg = loadImage("imgs/Camp_Blue.png");
 	_upperArcherImg = loadImage("imgs/Archer_Blue.png");
@@ -25,13 +50,25 @@ function preload() {
 	_lowerArcherImg = loadImage("imgs/Archer_Green.png");
 	_lowerTankerImg = loadImage("imgs/Tanker_Green.png");
 	_lowerDaggerImg = loadImage("imgs/Dagger_Green.png");
+	
+	_boardCtrl.UpperCampImg =   _upperCampImg;
+	_boardCtrl.UpperArcherImg = _upperArcherImg;
+	_boardCtrl.UpperTankerImg = _upperTankerImg;
+	_boardCtrl.UpperDaggerImg = _upperDaggerImg;
+	
+	_boardCtrl.LowerCampImg =   _lowerCampImg;
+	_boardCtrl.LowerArcherImg = _lowerArcherImg;
+	_boardCtrl.LowerTankerImg = _lowerTankerImg;
+	_boardCtrl.LowerDaggerImg = _lowerDaggerImg;
+	
+	initChess();
 }
 
 function setup() {
 	createCanvas(850, 700);
 	
 	_boardCtrl.BlockBorderColor = color(0, 0, 0);
-	_boardCtrl.NormalBlockFillColor = color(255, 255, 255);
+	_boardCtrl.NormalBlockFillColor = color(255, 255, 255);	
 	
 	_boardCtrl.UpperSelectedFillColor = color(30, 75, 157);	
 	_boardCtrl.UpperMovableFillColor = color(195, 215, 235);

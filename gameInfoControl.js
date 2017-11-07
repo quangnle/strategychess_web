@@ -8,6 +8,10 @@ var GameInfoControl = function(x, y, width, height){
 		this.BtnSelectCamp = new PictureBoxControl(x + 10 + 55, y + 15 + 55, 55, 55, campImg);	
 	}
 	
+	this.contains = function(x ,y){
+		return this.Pane.contains(x, y);
+	}
+	
 	this.draw = function(){
 		this.Pane.draw();
 		this.BtnSelectArcher.Pane.BgColor = this.Pane.BgColor;

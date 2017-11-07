@@ -38,7 +38,7 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 		}
 	}
 	
-	this.getBlock = function(row, col) {
+	this.getBlockControl = function(row, col) {
 		for (var i = 0; i < this.BlockControls.length; i++){
 			if (this.BlockControls[i].Row == row && this.BlockControls[i].Column == col)
 				return this.BlockControls[i];
@@ -60,14 +60,14 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 			if (unit.Team.Name == team.Name){
 				if (unit != null) {
 					this.GameCore.selectUnit(unit);
-					var sBlock = this.GameCore.getBlock(row, col);
+					var sBlock = this.GameCore.getBlockControl(row, col);
 					sBlock.State = team.Label + "Selected";
 					
 					// update view area
 					var moves = this.GameCore.getAvailableMoves();
 					if (moves != null){
 						for	(var i = 0; i < moves.length; i++){
-							var b = this.GameCore.getBlock(moves[i].Row, moves[i].Column);
+							var b = this.GameCore.getBlockControl(moves[i].Row, moves[i].Column);
 							b.State = team.Label + "Movable";
 						}
 					}
@@ -76,7 +76,7 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 					var targets = this.GameCore.getTargets();
 					if (targets != null){
 						for (var i = 0; i < targets.length; i++){
-							var b = this.GameCore.getBlock(moves[i].Row, moves[i].Column);
+							var b = this.GameCore.getBlockControl(moves[i].Row, moves[i].Column);
 							b.State = "Attackable";
 						}
 					}
@@ -87,7 +87,7 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 						var targets = this.GameCore.getTargets();
 						if (targets != null){
 							for (var i = 0; i < targets.length; i++){
-								var b = this.GameCore.getBlock(moves[i].Row, moves[i].Column);
+								var b = this.GameCore.getBlockControl(moves[i].Row, moves[i].Column);
 								b.State = "Attackable";
 							}
 						}
@@ -117,14 +117,40 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 			this.AttackableFillColor;
 		}
 	}
+	
+	this.getImage = function(unit){
+		if (unit.Team.Label == "Upper"){
+			if (unit.Type == "Archer") return this.UpperArcherImg;
+			else if (unit.Type == "Tanker") return this.UpperTankerImg;
+			else if (unit.Type == "Dagger") return this.UpperDaggerImg;
+			else return this.UpperCampImg;
+		} else {
+			if (unit.Type == "Archer") return this.LowerArcherImg;
+			else if (unit.Type == "Tanker") return this.LowerTankerImg;
+			else if (unit.Type == "Dagger") return this.LowerDaggerImg;
+			else return this.LowerCampImg;
+		}
+	}
 
 	this.draw = function(){
 		for	(var i = 0; i < this.BlockControls.length; i++){
 			this.BlockControls[i].Color = this.BlockBorderColor;
 			var fillColor = this.getColor(this.BlockControls[i]);
 			this.BlockControls[i].BgColor = fillColor;
-			this.BlockControls[i].draw();
+			this.BlockControls[i].drawBG();
 		}			
+		
+		var model = _gameCore.getModel();
+		// draw characters
+		for (var j = 0; j < 2; j++){
+			for (var i = 0; i < model[j].Units.length; i++){
+				var unit = model[j].Units[i];
+				var img = this.getImage(unit);
+				var blockControl = this.getBlockControl(unit.Row, unit.Column);
+				blockControl.drawCharacter(img);
+				blockControl.drawBars(unit.Hp, unit.CoolDown);
+			}
+		}
 	}
 	
 	this.clearState = function(){
