@@ -23,13 +23,13 @@ var BlockControl = function(x, y, width, height) {
 		// draw hp
 		for (var i = 0; i < hp; i++){
 			fill(color(250, 125, 125));
-			rect(this.Control.X + 1, this.Control.Y + this.Height - 1 - i * 3, 1);
+			rect(this.Control.X + 1, this.Control.Y + this.Height - (i + 1) * 4, 3, 3, 1);
 		}
 		
-		// draw hp
+		// draw cooldown
 		for (var i = 0; i < cd; i++){
-			fill(color(250, 125, 125));
-			rect(this.Control.X + 5, this.Control.Y + this.Height - 1 - i * 3, 1);
+			fill(color(125, 125, 250));
+			rect(this.Control.X + 5, this.Control.Y + this.Height - (i + 1) * 4, 3, 3, 1);
 		}
 	}
 	
