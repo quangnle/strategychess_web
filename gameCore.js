@@ -5,6 +5,7 @@ var GameCore = function(id, width, height){
 	this.Board = new Board(width, height);
 	this.Logics = [];
 	this.State = "init";
+	this.MatchLogic = null;
 	
 	this.register = function(teamName){
 		if (!this.UpperTeam){
@@ -21,6 +22,10 @@ var GameCore = function(id, width, height){
 		if (this.UpperTeam.Name == teamName) return this.UpperTeam;
 		if (this.LowerTeam.Name == teamName) return this.LowerTeam;
 		return null;
+	}
+	
+	this.getUnit = function(row, col){
+		return this.MatchLogic.getUnit(row, col);
 	}
 	
 	this.addUnit = function(type, row, col, teamName){
@@ -70,16 +75,18 @@ var GameCore = function(id, width, height){
 		var tArr = [this.UpperTeam, this.LowerTeam];
 		for (var t = 0; t < tArr.length; t++){
 			for (var u = 0; u < tArr[t].Units.length; u++){
-				if (tArr[t].Units[u].type == "Archer")
-					unitLogic = new ArcherLogic(tArr[t].Units[u], matchLogic);
-				else if (tArr[t].Units[u].type == "Tanker")
-					unitLogic = new TankerLogic(tArr[t].Units[u], matchLogic);
-				else if (tArr[t].Units[u].type == "Dagger")
-					unitLogic = new DaggerLogic(tArr[t].Units[u], matchLogic);
+				var unit = tArr[t].Units[u];
+				if (unit.Type == "Archer")
+					unitLogic = new ArcherLogic(tArr[t].Units[u], this.MatchLogic);
+				else if (unit.Type == "Tanker")
+					unitLogic = new TankerLogic(tArr[t].Units[u], this.MatchLogic);
+				else if (unit.Type == "Dagger")
+					unitLogic = new DaggerLogic(tArr[t].Units[u], this.MatchLogic);
 				
 				if (unitLogic != null){
 					unitLogic.moved = this.onUnitMoved;
 					unitLogic.attacked = this.onUnitAttacked;
+					this.Logics.push(unitLogic);
 				}
 			}
 		}
@@ -92,7 +99,7 @@ var GameCore = function(id, width, height){
 	}
 	
 	this.onUnitMoved = function(unit){
-		var tArr = [this.UpperTeam, this.LowerTeam];
+		var tArr = [self.UpperTeam, self.LowerTeam];
 		for (var t = 0; t < tArr.length; t++){
 			for (var u = 0; u < tArr[t].Units.length; u++){
 				if (tArr[t].Units[u].type == "Archer"){
@@ -128,20 +135,12 @@ var GameCore = function(id, width, height){
 	this.selectUnit = function(unit){
 		if (unit.Team.Name == this.CurrentTeam.Name){
 			this.SelectedUnit = unit;
-			this.SelectedLogic = GetLogic(unit);
+			this.SelectedLogic = this.getLogic(unit);
 		}
-	}
-	
-	this.getAvailableMoves = function(){
-		return this.SelectedLogic.getAvailableMoves();
 	}
 	
 	this.getAvailableMoves = function(row, col){
 		return this.SelectedLogic.getAvailableMoves(row, col);
-	}
-	
-	this.getTargets = function(){
-		return this.SelectedLogic.getTargets();
 	}
 	
 	this.getTargets = function(row, col){

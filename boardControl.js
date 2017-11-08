@@ -47,57 +47,66 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 	}
 	
 	this.onClicked = function(mx , my){
-		var x = this.X - mx;
-		var y = this.Y - my;
+		var x = mx - this.X;
+		var y = my - this.Y;
 		var col = Math.floor(x / this.BlockWidth);
 		var row = Math.floor(y / this.BlockHeight);
 		
-		if (GameCore.State == "init") {
+		if (this.GameCore.State == "init") {
 			
-		} else if(GameCore.State == "playing") {
+		} else if(this.GameCore.State == "playing") {
 			var team = this.GameCore.CurrentTeam;
 			var unit = this.GameCore.getUnit(row, col);
-			if (unit.Team.Name == team.Name){
-				if (unit != null) {
+			if (unit != null) {
+				if (unit.Team.Name == team.Name){
+					if (this.GameCore.SelectedUnit != null)
+						this.clearState();
+					
 					this.GameCore.selectUnit(unit);
-					var sBlock = this.GameCore.getBlockControl(row, col);
+					var sBlock = this.getBlockControl(row, col);
 					sBlock.State = team.Label + "Selected";
 					
 					// update view area
-					var moves = this.GameCore.getAvailableMoves();
+					var moves = this.GameCore.getAvailableMoves(unit.Row, unit.Column);
 					if (moves != null){
 						for	(var i = 0; i < moves.length; i++){
-							var b = this.GameCore.getBlockControl(moves[i].Row, moves[i].Column);
+							var b = this.getBlockControl(moves[i].Row, moves[i].Column);
 							b.State = team.Label + "Movable";
 						}
 					}
 					
 					// update target blocks
-					var targets = this.GameCore.getTargets();
+					var targets = this.GameCore.getTargets(unit.Row, unit.Column);
 					if (targets != null){
 						for (var i = 0; i < targets.length; i++){
-							var b = this.GameCore.getBlockControl(moves[i].Row, moves[i].Column);
+							var b = this.getBlockControl(moves[i].Row, moves[i].Column);
 							b.State = "Attackable";
 						}
 					}
-				} else {
-					if (this.SelectedUnit != null) {
-						this.GameCore.SelectedLogic.move(row, col);
+				}
+				else{
+					if (this.GameCore.SelectedUnit != null){
+						var canAttack = this.GameCore.SelectedLogic.attack(row, col);
+						if (canAttack) this.clearState();
+					}
+				}
+			} else {
+				if (this.GameCore.SelectedUnit != null){
+					var canMove = this.GameCore.SelectedLogic.move(row, col);
+					if (canMove){
+						this.clearState();
+						
 						// update target blocks
-						var targets = this.GameCore.getTargets();
+						var targets = this.GameCore.getTargets(unit.Row, unit.Column);
 						if (targets != null){
 							for (var i = 0; i < targets.length; i++){
-								var b = this.GameCore.getBlockControl(moves[i].Row, moves[i].Column);
+								var b = this.getBlockControl(moves[i].Row, moves[i].Column);
 								b.State = "Attackable";
 							}
 						}
 					}
 				}
-			} else {
-				if (this.GameCore.SelectedUnit != null){
-					this.GameCore.SelectedLogic.attack(row, col);
-				}
-			}				
+			}			
 		} else{
 			
 		}

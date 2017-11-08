@@ -84,7 +84,7 @@ function setup() {
 }
 
 function draw() {
-	
+	_boardCtrl.draw();
 }
 
 function mouseClicked(){

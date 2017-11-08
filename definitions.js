@@ -8,8 +8,8 @@ var Board = function(width, height){
 	this.Height = height;
 	this.Blocks = [];
 	
-	for (var r = 0; r < width; r++){
-		for (var c = 0; c < height; c++){
+	for (var r = 0; r < height; r++){
+		for (var c = 0; c < width; c++){
 			var b = new Block(r, c);
 			this.Blocks.push(b);
 		}

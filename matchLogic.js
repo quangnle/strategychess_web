@@ -12,7 +12,7 @@ var MatchLogic = function(board, upperTeam, lowerTeam){
 	}
 	
 	this.getBlock = function(row, col){
-		for (var i = 0; i < board.Blocks; i++){
+		for (var i = 0; i < board.Blocks.length; i++){
 			if (board.Blocks[i].Row == row && board.Blocks[i].Column == col) return this.Board.Blocks[i];
 		}
 		
@@ -31,12 +31,12 @@ var MatchLogic = function(board, upperTeam, lowerTeam){
 		return null;
 	}
 	
-	this.getUnits = function(row, col, radius){
+	this.getAllUnits = function(row, col, radius){
 		var result = [];
 		for (var t = 0; t < this.Teams.length; t++){
 			for (var u = 0; u < this.Teams[t].Units.length; u++){
 				var unit = this.Teams[t].Units[u];
-				if (Math.abs(unit.Row - row) <= radius && Math.abs(unit.Column - col) <= radius){
+				if ( !(unit.Row == row && unit.Column == col) && Math.abs(unit.Row - row) <= radius && Math.abs(unit.Column - col) <= radius){
 					result.push(unit);
 				}					
 			}
@@ -45,7 +45,7 @@ var MatchLogic = function(board, upperTeam, lowerTeam){
 	}
 	
 	this.getUnits = function(row, col, radius, team){
-		var units = this.getUnits(row, col, radius);
+		var units = this.getAllUnits(row, col, radius);
 		var result = [];
 		if (units != null && units.length > 0){
 			for (var i = 0; i < units.length; i++){
@@ -84,7 +84,7 @@ var MatchLogic = function(board, upperTeam, lowerTeam){
 		}
 		
 		// reset blocks
-		for (var i = 0; i < board.Blocks; i++){
+		for (var i = 0; i < board.Blocks.length; i++){
 			board.Blocks[i].Dist = null;
 		}
 		

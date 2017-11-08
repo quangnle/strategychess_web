@@ -3,7 +3,7 @@ var ArcherLogic = function(unit, matchLogic){
 	this.MatchLogic = matchLogic;
 	
 	this.move = function(row, col){
-		var availMoves = this.getAvailableMoves();
+		var availMoves = this.getAvailableMoves(this.Unit.Row, this.Unit.Column);
 		if (availMoves != null && availMoves.length > 0){
 			for	(var i = 0; i < availMoves.length; i++){
 				var block = availMoves[i];
@@ -37,23 +37,14 @@ var ArcherLogic = function(unit, matchLogic){
 		return false;
 	}
 	
-	this.getAvailableMoves = function(){
-		var availMoves = matchLogic.getMovableBlocks(unit.Row, unit.Column, unit.Speed);
-		return availMoves;
-	}
-	
 	this.getAvailableMoves = function(row, col){
 		var availMoves = matchLogic.getMovableBlocks(row, col, unit.Speed);
 		return availMoves;
 	}
 	
-	this.getTargets = function(){
-		return this.getTargets(unit.Row, unit.Column);
-	}
-	
 	this.getTargets = function(row, col){
 		if (unit.CoolDown == 0){
-			var units = matchLogic.getUnits(row, col, 1);
+			var units = matchLogic.getUnits(row, col, 1, unit.Team);
 			if (units != null && units.length > 0){
 				for (var i = 0; i < units.length; i++){
 					if (units[i].Team.Name != unit.Team.Name) return null;

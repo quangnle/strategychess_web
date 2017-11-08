@@ -8,7 +8,7 @@ var Queue = function(){
 	this.dequeue = function(){
 		if (this.Ar.length > 0){
 			var result = this.Ar[0];
-			this.Ar.slice(0, 1);
+			this.Ar = this.Ar.slice(1, this.Ar.length);
 			return result;
 		}
 		return null;
