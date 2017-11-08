@@ -1,4 +1,6 @@
 var GameCore = function(id, width, height){
+	var self = this;
+	
 	this.Id = id;
 	this.Width = width;
 	this.Height = height;
@@ -102,8 +104,8 @@ var GameCore = function(id, width, height){
 		var tArr = [self.UpperTeam, self.LowerTeam];
 		for (var t = 0; t < tArr.length; t++){
 			for (var u = 0; u < tArr[t].Units.length; u++){
-				if (tArr[t].Units[u].type == "Archer"){
-					var enemies = this.MatchLogic.getUnits(unit.Row, unit.Column, 1, this.MatchLogic.getOpponent(unit.Team));
+				if (tArr[t].Units[u].Type == "Archer"){
+					var enemies = self.MatchLogic.getUnits(unit.Row, unit.Column, 1, self.MatchLogic.getOpponent(unit.Team));
 					if (enemies != null && enemies.length > 0){
 						unit.CoolDown = Math.min(unit.MaxCoolDown, unit.CoolDown + 2);
 					}
@@ -113,11 +115,11 @@ var GameCore = function(id, width, height){
 	}
 	
 	this.onUnitAttacked = function(unit, targets){
-		var tArr = [this.UpperTeam, this.LowerTeam];
+		var tArr = [self.UpperTeam, self.LowerTeam];
 		for (var t = 0; t < tArr.length; t++){
 			for (var u = 0; u < tArr[t].Units.length; u++){
 				if (tArr[t].Units[u].Hp <= 0){
-					this.remove(tArr[t].Units[u]);
+					self.remove(tArr[t].Units[u]);
 				}
 			}
 		}

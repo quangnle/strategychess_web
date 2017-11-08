@@ -52,6 +52,7 @@ var MatchLogic = function(board, upperTeam, lowerTeam){
 				if (units[i].Team.Name == team.Name) result.push(units[i]);
 			}
 		}
+		return result;
 	}	
 	
 	this.getMovableBlocks = function(row, col, radius){

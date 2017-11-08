@@ -79,7 +79,7 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 					var targets = this.GameCore.getTargets(unit.Row, unit.Column);
 					if (targets != null){
 						for (var i = 0; i < targets.length; i++){
-							var b = this.getBlockControl(moves[i].Row, moves[i].Column);
+							var b = this.getBlockControl(targets[i].Row, targets[i].Column);
 							b.State = "Attackable";
 						}
 					}
@@ -97,10 +97,10 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 						this.clearState();
 						
 						// update target blocks
-						var targets = this.GameCore.getTargets(unit.Row, unit.Column);
+						var targets = this.GameCore.getTargets(this.GameCore.SelectedUnit.Row, this.GameCore.SelectedUnit.Column);
 						if (targets != null){
 							for (var i = 0; i < targets.length; i++){
-								var b = this.getBlockControl(moves[i].Row, moves[i].Column);
+								var b = this.getBlockControl(targets[i].Row, targets[i].Column);
 								b.State = "Attackable";
 							}
 						}
@@ -113,8 +113,9 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 	}
 	
 	this.getColor = function(blockCtrl){
-		if (blockCtrl.State == "Empty") return this.NormalBlockFillColor;
-		else if (blockCtrl.State == "UpperSelected"){
+		if (blockCtrl.State == "Empty") {
+			return this.NormalBlockFillColor;
+		} else if (blockCtrl.State == "UpperSelected"){
 			return this.UpperSelectedFillColor;
 		} else if (blockCtrl.State == "UpperMovable") {	
 			return this.UpperMovableFillColor;
@@ -123,7 +124,7 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 		} else if (blockCtrl.State == "LowerMovable") {			
 			return this.LowerMovableFillColor
 		} else {
-			this.AttackableFillColor;
+			return this.AttackableFillColor;
 		}
 	}
 	
