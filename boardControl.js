@@ -46,6 +46,32 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 		return null;
 	}
 	
+	this.selectUnit = function(unit){
+		this.GameCore.selectUnit(unit);
+		var sBlock = this.getBlockControl(unit.Row, unit.Column);
+		sBlock.State = unit.Team.Label + "Selected";
+	}
+	
+	this.updateMoveArea = function(unit){
+		var moves = this.GameCore.getAvailableMoves(unit.Row, unit.Column);
+		if (moves != null){
+			for	(var i = 0; i < moves.length; i++){
+				var b = this.getBlockControl(moves[i].Row, moves[i].Column);
+				b.State = unit.Team.Label + "Movable";
+			}
+		}
+	}
+	
+	this.updateAttackArea = function(unit){
+		var targets = this.GameCore.getTargets(unit.Row, unit.Column);
+		if (targets != null){
+			for (var i = 0; i < targets.length; i++){
+				var b = this.getBlockControl(targets[i].Row, targets[i].Column);
+				b.State = "Attackable";
+			}
+		}
+	}
+	
 	this.onClicked = function(mx , my){
 		var x = mx - this.X;
 		var y = my - this.Y;
@@ -59,32 +85,15 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 			var unit = this.GameCore.getUnit(row, col);
 			if (unit != null) {
 				if (unit.Team.Name == team.Name){
-					if (this.GameCore.SelectedUnit != null)
-						this.clearState();
-					
-					this.GameCore.selectUnit(unit);
-					var sBlock = this.getBlockControl(row, col);
-					sBlock.State = team.Label + "Selected";
-					
-					// update view area
-					var moves = this.GameCore.getAvailableMoves(unit.Row, unit.Column);
-					if (moves != null){
-						for	(var i = 0; i < moves.length; i++){
-							var b = this.getBlockControl(moves[i].Row, moves[i].Column);
-							b.State = team.Label + "Movable";
+					if ((this.GameCore.SelectedUnit == null) || (this.GameCore.SelectedUnit != null && team.Movable)){
+						if (unit.Team.Movable) {
+							this.clearState();
+							this.selectUnit(unit);
+							this.updateMoveArea(unit);
+							this.updateAttackArea(unit);
 						}
-					}
-					
-					// update target blocks
-					var targets = this.GameCore.getTargets(unit.Row, unit.Column);
-					if (targets != null){
-						for (var i = 0; i < targets.length; i++){
-							var b = this.getBlockControl(targets[i].Row, targets[i].Column);
-							b.State = "Attackable";
-						}
-					}
-				}
-				else{
+					} 
+				} else {
 					if (this.GameCore.SelectedUnit != null){
 						var canAttack = this.GameCore.SelectedLogic.attack(row, col);
 						if (canAttack) {

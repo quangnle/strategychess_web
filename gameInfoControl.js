@@ -1,6 +1,7 @@
 var GameInfoControl = function(x, y, width, height){
 	this.Pane = new PaneControl(x, y, width, height);
 	this.SelectingType = null;
+	this.GameCore = null;
 	
 	this.initButtons = function(archerImg, tankerImg, daggerImg, campImg){
 		this.BtnSelectArcher = new PictureBoxControl(x + 5, y + 10, 55, 55, archerImg);
@@ -21,10 +22,10 @@ var GameInfoControl = function(x, y, width, height){
 			this.SelectingType = "Camp";
 		} else if (this.BtnNext.contains(x, y)) {
 			this.BtnNext.State = "clicked";
-			console.log("next clicked");
-		} 
-		
-		console.log(this.SelectingType);
+			if (this.onNextClicked) this.onNextClicked();
+		} else {
+			this.BtnNext.State = "normal";
+		}
 	}
 	
 	this.mouseHover = function(x, y){

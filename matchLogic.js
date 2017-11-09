@@ -80,7 +80,8 @@ var MatchLogic = function(board, upperTeam, lowerTeam){
 					}
 				}
 				
-				result.push(block);
+				if (!(block.Row == row && block.Column == col))
+					result.push(block);
 			} while (!q.empty());
 		}
 		

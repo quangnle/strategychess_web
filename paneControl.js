@@ -7,7 +7,8 @@ var PaneControl = function(x, y, width, height){
 	this.Height = height;
 	
 	this.contains = function(x, y){
-		return(x >= this.X && x <= this.Width && y >= this.Y && y <= this.Height);
+		var result = (x >= this.X && x <= (this.X + this.Width) && y >= this.Y && y <= (this.Y + this.Height));
+		return result;
 	}
 	
 	this.draw = function(){

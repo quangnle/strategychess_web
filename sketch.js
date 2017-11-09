@@ -15,6 +15,10 @@ var _lowerArcherImg = null;
 var _lowerTankerImg = null;
 var _lowerDaggerImg = null;
 
+_gameInfoCtrl.onNextClicked = function (){
+	_boardCtrl.GameCore.next();
+}
+
 function initChess(){
 	_gameCore.register("Alice");	
 	_gameCore.addUnit("Archer", 2, 2,_gameCore.UpperTeam.Name);
@@ -85,11 +89,16 @@ function setup() {
 
 function draw() {
 	_boardCtrl.draw();
+	_gameInfoCtrl.draw();
 }
 
 function mouseMoved() {
 	if (_gameInfoCtrl.contains(mouseX, mouseY)) {
 		_gameInfoCtrl.mouseHover(mouseX, mouseY);
+	} else {
+		if (_gameInfoCtrl.BtnNext) {
+			_gameInfoCtrl.BtnNext.State = "normal";
+		}
 	}
 }
 
@@ -99,10 +108,10 @@ function mouseClicked(){
 			_boardCtrl.onClicked(mouseX, mouseY);
 		} else if (_gameInfoCtrl.contains(mouseX, mouseY)) {
 			_gameInfoCtrl.clickedAt(mouseX, mouseY);
+		} else {
+			_gameInfoCtrl.BtnNext.State = "normal";
 		}
-	} else if (mouseButton == RIGHT){
-		console.log(mouseX + " " + mouseY);
-	}
+	} 
 }
 
 function doubleClicked() {
