@@ -30,6 +30,10 @@ var GameCore = function(id, width, height){
 		return this.MatchLogic.getUnit(row, col);
 	}
 	
+	this.getModel = function(){
+		return [this.UpperTeam, this.LowerTeam, this.Board];
+	}
+	
 	this.addUnit = function(type, row, col, teamName){
 		if ( this.State == "init") {
 			var team = this.getTeam(teamName);
@@ -96,18 +100,16 @@ var GameCore = function(id, width, height){
 		this.State = "playing";
 	}
 	
-	this.getModel = function(){
-		return [this.UpperTeam, this.LowerTeam, this.Board];
-	}
-	
 	this.onUnitMoved = function(unit){
+		unit.Team.Movable = false;
+		
 		var tArr = [self.UpperTeam, self.LowerTeam];
 		for (var t = 0; t < tArr.length; t++){
 			for (var u = 0; u < tArr[t].Units.length; u++){
 				if (tArr[t].Units[u].Type == "Archer"){
-					var enemies = self.MatchLogic.getUnits(unit.Row, unit.Column, 1, self.MatchLogic.getOpponent(unit.Team));
+					var enemies = self.MatchLogic.getUnits(tArr[t].Units[u].Row, tArr[t].Units[u].Column, 1, self.MatchLogic.getOpponent(tArr[t].Units[u].Team));
 					if (enemies != null && enemies.length > 0){
-						unit.CoolDown = Math.min(unit.MaxCoolDown, unit.CoolDown + 2);
+						tArr[t].Units[u].CoolDown = Math.min(tArr[t].Units[u].MaxCoolDown, tArr[t].Units[u].CoolDown + 2);
 					}
 				}
 			}
@@ -115,14 +117,14 @@ var GameCore = function(id, width, height){
 	}
 	
 	this.onUnitAttacked = function(unit, targets){
-		var tArr = [self.UpperTeam, self.LowerTeam];
-		for (var t = 0; t < tArr.length; t++){
-			for (var u = 0; u < tArr[t].Units.length; u++){
-				if (tArr[t].Units[u].Hp <= 0){
-					self.remove(tArr[t].Units[u]);
-				}
+		for (var i = 0; i < targets.length; i++){
+			if (targets[i].Hp <= 0){
+				var deadUnit = targets[i];
+				deadUnit.Row = -1;
+				deadUnit.Column = -1;
 			}
 		}
+		unit.CoolDown = unit.MaxCoolDown;
 	}
 	
 	this.getLogic = function(unit){
@@ -153,8 +155,17 @@ var GameCore = function(id, width, height){
 		return this.SelectedLogic.attack(row, col);
 	}
 	
+	this.updateCoolDown = function(team){
+		for	(var i = 0; i <  team.Units.length; i++){
+			if (team.Units[i].CoolDown > 0) team.Units[i].CoolDown--;
+		}
+	}
+	
 	this.next = function(){
-		if (this.CurrentTeam == UpperTeam) this.CurrentTeam = this.LowerTeam;
-		else this.CurrentTeam = this.UpperTeam;
+		this.updateCoolDown(this.UpperTeam);
+		this.updateCoolDown(this.LowerTeam);
+		
+		this.CurrentTeam.Movable = true;
+		this.CurrentTeam = this.MatchLogic.getOpponent(this.CurrentTeam);		
 	}
 }

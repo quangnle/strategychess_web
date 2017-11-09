@@ -87,7 +87,10 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 				else{
 					if (this.GameCore.SelectedUnit != null){
 						var canAttack = this.GameCore.SelectedLogic.attack(row, col);
-						if (canAttack) this.clearState();
+						if (canAttack) {
+							this.clearState();
+							this.GameCore.next();
+						}
 					}
 				}
 			} else {
@@ -103,6 +106,8 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 								var b = this.getBlockControl(targets[i].Row, targets[i].Column);
 								b.State = "Attackable";
 							}
+						} else {
+							this.GameCore.next();
 						}
 					}
 				}
@@ -157,8 +162,10 @@ var BoardControl = function(x, y, width, height, blockWidth, blockHeight){
 				var unit = model[j].Units[i];
 				var img = this.getImage(unit);
 				var blockControl = this.getBlockControl(unit.Row, unit.Column);
-				blockControl.drawCharacter(img);
-				blockControl.drawBars(unit.Hp, unit.CoolDown);
+				if(blockControl != null){
+					blockControl.drawCharacter(img);
+					blockControl.drawBars(unit.Hp, unit.CoolDown);
+				}
 			}
 		}
 	}

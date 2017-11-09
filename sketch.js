@@ -87,12 +87,17 @@ function draw() {
 	_boardCtrl.draw();
 }
 
+function mouseMoved() {
+	if (_gameInfoCtrl.contains(mouseX, mouseY)) {
+		_gameInfoCtrl.mouseHover(mouseX, mouseY);
+	}
+}
+
 function mouseClicked(){
 	if (mouseButton == LEFT) {
 		if (_boardCtrl.contains(mouseX, mouseY)){
 			_boardCtrl.onClicked(mouseX, mouseY);
-		}
-		else if (_gameInfoCtrl.contains(mouseX, mouseY)) {
+		} else if (_gameInfoCtrl.contains(mouseX, mouseY)) {
 			_gameInfoCtrl.clickedAt(mouseX, mouseY);
 		}
 	} else if (mouseButton == RIGHT){
@@ -101,5 +106,5 @@ function mouseClicked(){
 }
 
 function doubleClicked() {
-	
+	console.log(mouseX + " " + mouseY);
 }

@@ -71,4 +71,5 @@ var Tanker = function(id, row, column, team){
 var Team = function(name){
 	this.Name = name;
 	this.Units = [];
+	this.Movable = true;
 }

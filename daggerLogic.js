@@ -3,6 +3,8 @@ var DaggerLogic = function(unit, matchLogic){
 	this.MatchLogic = matchLogic;
 	
 	this.move = function(row, col){
+		if (!this.Unit.Team.Movable) return false;
+		
 		var availMoves = this.getAvailableMoves(this.Unit.Row, this.Unit.Column);
 		if (availMoves != null && availMoves.length > 0){
 			for	(var i = 0; i < availMoves.length; i++){
@@ -22,7 +24,7 @@ var DaggerLogic = function(unit, matchLogic){
 	
 	this.attack = function(row, col){
 		if (unit.CoolDown == 0) {
-			var targets = this.getTargets();
+			var targets = this.getTargets(this.Unit.Row, this.Unit.Column);
 			if (targets != null && targets.length > 0){
 				for (var i = 0; i < targets.length; i++){
 					if (row == targets[i].Row && col == targets[i].Column){

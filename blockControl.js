@@ -12,8 +12,6 @@ var BlockControl = function(x, y, width, height) {
 	this.Control = new PaneControl(x, y, width, height);
 	
 	this.drawBG = function(){
-		this.Control.X = this.X;
-		this.Control.Y = this.Y;
 		this.Control.Color = this.Color;
 		this.Control.BgColor = this.BgColor;
 		this.Control.draw();
@@ -38,8 +36,6 @@ var BlockControl = function(x, y, width, height) {
 	}
 	
 	this.contains = function(x, y){
-		this.Control.X = this.X;
-		this.Control.Y = this.Y;
 		return this.Control.contains(x, y);
 	}
 }
